@@ -9,7 +9,6 @@ import java.sql.*;
 import java.util.Scanner;
 
 /**
- * @author Dr. Blaha
  * @coauthor Devin Ober
  * 
  */
@@ -52,11 +51,11 @@ public class TestUtilities {
 				break;
 			}
 			case 6: {
-				callGetNameHours();
+				callGetGradPlan()();
 				break;
 			}
 			case 7: {
-				callGetAverageHours();
+				callGetGradPlan();
 				break;
 			}
 			case 8: {
@@ -104,8 +103,8 @@ public class TestUtilities {
 		System.out.println("3)  call matchLastName(String)");
 		System.out.println("4)  call employeeByDNO()");
 		System.out.println("5)  open with user name and password");
-		System.out.println("6)  call getNameHours()");
-		System.out.println("7)  call getAverageHours()");
+		System.out.println("6)  call getGradPlan()");
+		System.out.println("7)  call getWhenOffered()");
 		System.out.println("8)  call getSalaryFromEmployee()");
 		System.out.println("9)  close the DB");
 		System.out.println("10) quit");
@@ -191,34 +190,53 @@ public class TestUtilities {
 			}
 		
 	}
-	//test callGetNameHours() method 
-	static void callGetNameHours() throws SQLException {
+	//test callGetGradPlan() method 
+	static void callGetGradPlan() throws SQLException {
 		ResultSet rs;
-		System.out.print("Please enter a department number: ");
-		String input = keyboard.nextLine();
-		int dno= Integer.parseInt(input); 
+		int id = 0;
+		while (id < 1) {
+			try {
+				System.out.print("\nPlease enter a valid student id: ");
+				input = keyboard.nextLine();
+				id = Integer.parseInt(input);
+				System.out.println();
+			} catch (NumberFormatException e) {
+				System.out.println("Please input a valid id");
+			}
+		}
 		System.out.println("\n Worker Hours In Department " + dno); 
 		System.out.println("*******************************************");
-		System.out.printf("%-12s   %s\n",   "LastName, FirstName", "Dept Number");
+		System.out.printf("%-12s   %s\n",   "Department", "CRN","Term","Year",);
 		rs = testObj.getNameHours(dno); 
 		while(rs.next()){ 
 			System.out.printf("    %-8s     %s\n", rs.getString(1)+ ", " + rs.getString(2), 
-					  rs.getString(3));
+					  rs.getString(3), rs.getString(4));
 			}
 		
 	}
 	
-	// test callGetAverageHours() method
-	static void callGetAverageHours() throws SQLException {
+	// test callGetWhenOffered() method
+	static void callGetWhenOffered() throws SQLException {
 		ResultSet rs;
-		System.out.println("\nAverage Project Hours");
-		System.out.println("***************************************************");
-		System.out.printf("%-12s  %s\n", "Total Hours",   "Average hours", "# of Workers");
-		rs = testObj.getAverageHours();
-		while (rs.next()) {
-			System.out.printf("    %-8s    %s\n", rs.getString(1), 
-					rs.getString(2), rs.getString(3));
+		int crn = 0;
+		while (id < 1) {
+			try {
+				System.out.print("\nPlease enter requested crn: ");
+				input = keyboard.nextLine();
+				crn = Integer.parseInt(input);
+				System.out.println();
+			} catch (NumberFormatException e) {
+				System.out.println("please input a valid crn");
+			}
 		}
+		System.out.println("\n Worker Hours In Department " + dno); 
+		System.out.println("*******************************************");
+		System.out.printf("%-12s   %s\n",   "CRN", "Department","Term","Year",);
+		rs = testObj.getNameHours(dno); 
+		while(rs.next()){ 
+			System.out.printf("    %-8s     %s\n", rs.getString(1)+ ", " + rs.getString(2), 
+					  rs.getString(3), rs.getString(4));
+			}
 	}
 
 	//test callGetSalaryFromEmployee() method 

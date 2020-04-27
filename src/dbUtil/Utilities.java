@@ -10,7 +10,6 @@ package dbUtil;
 import java.sql.*;
 
 /**
- * @author Dr. Blaha
  * @coauthor Devin Ober
  */
 public class Utilities {
@@ -168,26 +167,22 @@ public class Utilities {
 
 	
 	/**
-	 * 2 Write and Test 
-	 * Write a method that returns lname, fname, project number and hours of all 
-	 * employees that work on a project controlled by department, deptNum. Here 
-	 * deptNum is given as input from the client
+	 * getGradPlan
 	 * 
-	 * @param deptNum is the controlling department number
-	 * @return ResultSet with lname, fname, project number and hours of all
-	 *         employees that work on a project controlled by department dno
+	 * @param id The student's id number
+	 * @return rset All grad plan entries associated with the student's id.
 	 */
-	public ResultSet getNameHours(int deptNum) {
+	public ResultSet getGradPlan(int id) {
 		ResultSet rset = null;
 		String sql = null;
 
 		try {
 			// create a Statement and an SQL string for the statement
 			Statement stmt = conn.createStatement();
-			sql = "SELECT lname, fname, hours " +
-			      "FROM employee, department, project, works_on " + 
-				  "WHERE dnum="+deptNum+" and dnum=dnumber and pno=pnumber and essn=ssn  " + 
-			      "ORDER BY lname, fname ";
+			sql = "SELECT c_dept, c_num, term, year " + 
+				  "From GradPlan "+
+			      "WHERE s_s_id = " + id + " "
+				  "ORDER BY year,term";
 			rset = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			System.out.println("createStatement " + e.getMessage() + sql);
@@ -196,27 +191,21 @@ public class Utilities {
 		return rset;
 	}
 	/**
-	 * 3 Write and Test
-	 * Write a method that returns for each project the number of employees 
-	 * that work on the project, the total number of hours they have all worked 
-	 * on the project, and the average number of hours each employee has worked 
-	 * on the project.
+	 * getWhenOffered()
 	 * 
-	 * @return ResultSet that has for each project the number of employees that
-	 *         work on the project, the total number of hours they have all
-	 *         worked on the project, and the average number of hours each
-	 *         employee has worked on project
+	 * @param courseNum The student's id number
+	 * @return ResultSet that has the information on the selected course
 	 */
-	public ResultSet getAverageHours() {
+	public ResultSet getWhenOffered(int courseNum) {
 		ResultSet rset = null;
 		String sql = null;
 
 		try {
 			// create a Statement and an SQL string for the statement
 			Statement stmt = conn.createStatement();
-			sql = "SELECT pno,SUM(hours),AVG(hours),COUNT(pno)" +
-			      "FROM works_on " +
-			      "GROUP BY pno";
+			sql = "SELECT num, dept, term, altYear " +
+			      "FROM Course " +
+			      "Where num = " courseNum;
 			rset = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			System.out.println("createStatement " + e.getMessage() + sql);
