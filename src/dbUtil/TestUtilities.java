@@ -38,7 +38,7 @@ public class TestUtilities {
 				break;
 			}
 			case 6: {
-				callGetGradPlan()();
+				callGetGradPlan();
 				break;
 			}
 			case 7: {
@@ -97,6 +97,7 @@ public class TestUtilities {
 	static void callGetGradPlan() throws SQLException {
 		ResultSet rs;
 		int id = 0;
+		String input = "";
 		while (id < 1) {
 			try {
 				System.out.print("\nPlease enter a valid student id: ");
@@ -107,10 +108,10 @@ public class TestUtilities {
 				System.out.println("Please input a valid id");
 			}
 		}
-		System.out.println("\n Worker Hours In Department " + dno); 
+		System.out.println("\n Student GradPlan for " + id); 
 		System.out.println("*******************************************");
-		System.out.printf("%-12s   %s\n",   "Department", "CRN","Term","Year",);
-		rs = testObj.getNameHours(dno); 
+		System.out.printf("%-12s   %s\n",   "Department", "CRN","Term","Year");
+		rs = testObj.getGradPlan(id); 
 		while(rs.next()){ 
 			System.out.printf("    %-8s     %s\n", rs.getString(1)+ ", " + rs.getString(2), 
 					  rs.getString(3), rs.getString(4));
@@ -121,8 +122,9 @@ public class TestUtilities {
 	// test callGetWhenOffered() method
 	static void callGetWhenOffered() throws SQLException {
 		ResultSet rs;
+		String input = "";
 		int crn = 0;
-		while (id < 1) {
+		while (crn < 1) {
 			try {
 				System.out.print("\nPlease enter requested crn: ");
 				input = keyboard.nextLine();
@@ -132,10 +134,10 @@ public class TestUtilities {
 				System.out.println("please input a valid crn");
 			}
 		}
-		System.out.println("\n Worker Hours In Department " + dno); 
+		System.out.println("\n When " +crn+ " is offered"); 
 		System.out.println("*******************************************");
-		System.out.printf("%-12s   %s\n",   "CRN", "Department","Term","Year",);
-		rs = testObj.getNameHours(dno); 
+		System.out.printf("%-12s   %s\n",   "CRN", "Department","Term","Year");
+		rs = testObj.getWhenOffered(crn); 
 		while(rs.next()){ 
 			System.out.printf("    %-8s     %s\n", rs.getString(1)+ ", " + rs.getString(2), 
 					  rs.getString(3), rs.getString(4));

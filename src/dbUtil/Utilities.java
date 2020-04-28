@@ -91,12 +91,16 @@ public class Utilities {
 
 		try {
 			// create a Statement and an SQL string for the statement
-			Statement stmt = conn.createStatement();
 			sql = "SELECT c_dept, c_num, term, year " + 
 				  "From GradPlan "+
-			      "WHERE s_s_id = " + id + " "
+			      "WHERE s_s_id = ? " +
 				  "ORDER BY year,term";
-			rset = stmt.executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			pstmt.clearParameters();
+			pstmt.setInt(1, id); // set the 1 parameter
+
+			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("createStatement " + e.getMessage() + sql);
 		}
@@ -115,11 +119,16 @@ public class Utilities {
 
 		try {
 			// create a Statement and an SQL string for the statement
-			Statement stmt = conn.createStatement();
+
 			sql = "SELECT num, dept, term, altYear " +
 			      "FROM Course " +
-			      "Where num = " + courseNum;
-			rset = stmt.executeQuery(sql);
+			      "Where num = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			pstmt.clearParameters();
+			pstmt.setInt(1, courseNum); // set the 1 parameter
+
+			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("createStatement " + e.getMessage() + sql);
 		}
