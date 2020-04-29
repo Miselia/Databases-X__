@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 /**
  * @coauthor Devin Ober
+ * @coauthor Chris Caudill
+ * @coauthor Nathan Hohnbaum
+ * @coauthor Moses Mbugua
  * 
  */
 public class TestUtilities {
@@ -51,6 +54,10 @@ public class TestUtilities {
 			}
 			case 7: {
 				callGetGradPlan();
+				break;
+			}
+			case 8: {
+				callgetElectiveOfferedCourses();
 				break;
 			}
 		
@@ -130,13 +137,11 @@ public class TestUtilities {
 	// test callGetWhenOffered() method
 	static void callGetWhenOffered() throws SQLException {
 		ResultSet rs;
-		String input = "";
-		int crn = 0;
-		while (crn < 1) {
+		String crn = "";
+		while (crn.length() < 1) {
 			try {
 				System.out.print("\nPlease enter requested crn: ");
-				input = keyboard.nextLine();
-				crn = Integer.parseInt(input);
+				crn = keyboard.nextLine();
 				System.out.println();
 			} catch (NumberFormatException e) {
 				System.out.println("please input a valid crn");
@@ -186,8 +191,48 @@ public class TestUtilities {
 			System.out.println("Error changing password");
 		}
 	}
-	
-	//test callGetSalaryFromEmployee() method 
+		
+	//test callgetElectiveOfferedCourses()
+		static void callgetElectiveOfferedCourses() throws SQLException {
+			ResultSet rs;
+			String term = "";
+			String input = "";
+			int id  = 0;
+			while (term.length() < 1 && id < 1) {
+				try {
+					System.out.print("\nPlease enter requested semester (F, J, S) : ");
+					term = keyboard.nextLine().toUpperCase();
+					
+					System.out.print("\nPlease enter requested student id: ");
+					input = keyboard.nextLine();
+					id = Integer.parseInt(input);
+				} catch(NumberFormatException e) {
+					System.out.println("Please input a valid student id");
+				}
+			
+			}
+			switch (term) {
+				case "F": 
+					System.out.println("\n When 300+ Elective courses for Fall term are offered"); 
+					break;
+				case "J":
+					System.out.println("\n When 300+ Elective courses for J-term are offered"); 
+					break;
+				case "S":
+					System.out.println("\n When 300+ Elective courses for Spring term are offered"); 
+					break;
+				default:
+				break;
+			}
+			System.out.println("*******************************************");
+			System.out.printf("%-12s   %-12S      %-12s  %s\n",   "Department", "Title","Course Number","altYear");
+			rs = testObj.getElectiveOfferedCourses(term, id);
+			while(rs.next()){ 
+				System.out.printf("%-6s  %-18s  %-12s %s\n", rs.getString(1), rs.getString(2), 
+						  rs.getString(3), rs.getString(4));
+				}
+		}
+
 
 
 		

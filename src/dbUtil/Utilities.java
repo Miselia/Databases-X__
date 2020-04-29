@@ -12,6 +12,9 @@ import java.sql.*;
 
 /**
  * @coauthor Devin Ober
+ * @coauthor Chris Caudill
+ * @coauthor Nathan Hohnbaum
+ * @coauthor Moses Mbugua
  */
 public class Utilities {
 
@@ -67,7 +70,7 @@ public class Utilities {
 	public void openDB(String user, String pass) {
 
 		// Connect to the database
-		String url = "jdbc:mysql://localhost:2000/company367_2020?user=" + user + "&password="+pass;
+		String url = "jdbc:mysql://localhost:2000/X__367_2020?user=" + user + "&password="+pass;
 		
 		try {
 			conn = DriverManager.getConnection(url);
@@ -108,13 +111,15 @@ public class Utilities {
 
 		return rset;
 	}
+
+		
 	/**
 	 * getWhenOffered()
 	 * 
 	 * @param courseNum The student's id number
 	 * @return ResultSet that has the information on the selected course
 	 */
-	public ResultSet getWhenOffered(int courseNum) {
+	public ResultSet getWhenOffered(String courseNum) {
 		ResultSet rset = null;
 		String sql = null;
 
@@ -127,7 +132,7 @@ public class Utilities {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 
 			pstmt.clearParameters();
-			pstmt.setInt(1, courseNum); // set the 1 parameter
+			pstmt.setString(1, courseNum); // set the 1 parameter
 
 			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
@@ -136,6 +141,10 @@ public class Utilities {
 
 		return rset;
 	}
+	
+	
+	
+	
 	
 	/**
 	 * Generates a salt for passwords
@@ -216,5 +225,43 @@ public class Utilities {
 		}
 		return false;
 	}
+	
+	
+	
+	/**
+	 * check what 300+ electives are offered at a point
+	 * 
+	 * @param term, the Semester a class is offered
+	 * @return ResultSet for list of electives courses
+	 * 
+	 */
+	public ResultSet getElectiveOfferedCourses(String term, int id) {
+		ResultSet rset = null;
+		String sql = null;
+		
+		try {
+			
+			sql = "SELECT dept, title, num, altYear " + 
+				   "FROM Required AS R, Course AS C, Student AS S " + 
+				   "WHERE S.s_id = ? AND S.major = R.d_type AND C.term = ? AND elective = true AND c_num = num AND c_dept = dept;";
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			pstmt.clearParameters();
+			pstmt.setInt(1,  id);
+			pstmt.setString(2, term);
+			
+			rset = pstmt.executeQuery();
+			
+		}catch (SQLException e) {
+			System.out.println("createStatement " + e.getMessage() + sql);
+
+		}
+		
+		return rset;
+	}
+	
+	
+	
 	
 }// Utilities class
