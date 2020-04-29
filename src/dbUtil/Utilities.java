@@ -262,6 +262,39 @@ public class Utilities {
 	}
 	
 	
+	/**
+	 * Get major requirements for a student depending on their major
+	 * 
+	 * @param id - student id
+	 * @return ResultSet for list of all required courses
+	 * 
+	 */
+	public ResultSet getRequired(int id) {
+		ResultSet rset = null;
+		String sql = null;
+		
+		try {
+			
+			sql = "SELECT * " + 
+				   "FROM Required" + 
+				   "WHERE dtype = major IN (SELECT major FROM student WHERE s_id = ?);";
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			pstmt.clearParameters();
+			pstmt.setInt(1,  id);
+			
+			rset = pstmt.executeQuery();
+			
+		}catch (SQLException e) {
+			System.out.println("createStatement " + e.getMessage() + sql);
+
+		}
+		
+		return rset;
+	}
+	
+	
 	
 	
 }// Utilities class
