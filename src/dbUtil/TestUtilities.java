@@ -32,7 +32,15 @@ public class TestUtilities {
 			case 1: {
 				openDefault();
 				break;
-			}			
+			}
+			case 2: {
+				callDoLogin();
+				break;
+			}
+			case 3: {
+				callChangePassword();
+				break;
+			}
 			case 5: {
 				callOpenDB();
 				break;
@@ -144,6 +152,41 @@ public class TestUtilities {
 			}
 	}
 
+	static void callDoLogin()
+	{
+		System.out.println("Username: ");
+		String username = keyboard.nextLine();
+		System.out.println("Password: ");
+		String password = keyboard.nextLine();
+		ResultSet rset = testObj.doLogin(username, password);
+		System.out.println("id");
+		System.out.println("--------------");
+		try {
+			while (rset.next()) {
+				System.out.println(rset.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	static void callChangePassword()
+	{
+		System.out.println("Username: ");
+		String username = keyboard.nextLine();
+		System.out.println("Old Password: ");
+		String oldPassword = keyboard.nextLine();
+		System.out.println("New Password: ");
+		String newPassword = keyboard.nextLine();
+		boolean succ = testObj.changePassword(username, oldPassword, newPassword);
+		if (succ) {
+			System.out.println("Password successfully changed");
+		} else {
+			System.out.println("Error changing password");
+		}
+	}
+	
 	//test callGetSalaryFromEmployee() method 
 
 

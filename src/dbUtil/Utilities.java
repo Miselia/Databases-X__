@@ -6,6 +6,7 @@ package dbUtil;
  * 
  */
 
+import java.security.SecureRandom;
 // You need to import the java.sql package to use JDBC methods and classes
 import java.sql.*;
 
@@ -30,7 +31,7 @@ public class Utilities {
 	public void openDB() {
 
 		// Connect to the database
-		String url = "jdbc:mysql://localhost:2000/company367_2020?user=X__367&password=X__367";
+		String url = "jdbc:mysql://localhost:2000/X__367_2020?user=X__367&password=X__367";
 		
 		try {
 			conn = DriverManager.getConnection(url);
@@ -134,6 +135,86 @@ public class Utilities {
 		}
 
 		return rset;
+	}
+	
+	/**
+	 * Generates a salt for passwords
+	 * @return a salt for passwords
+	 */
+	public byte[] generateSalt()
+	{
+		SecureRandom sr = new SecureRandom();
+		byte[] ret = new byte[256];
+		sr.nextBytes(ret);
+		return ret;
+	}
+	
+	/**
+	 * Attempts to log a user in
+	 * @param username The username of the person attempting to log in
+	 * @param password The password of the person attempting to log in
+	 * @return A ResultSet containing the user's user id or an empty set if the login is unsuccessful
+	 */
+	public ResultSet doLogin(String username, String password)
+	{
+		ResultSet rset = null;
+		String sql = null;
+		try {
+			
+			sql = "SELECT id " + 
+					"FROM User " + 
+					"WHERE pw_hash = sha2(concat(sha2(?,256),pw_salt),256) AND id = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.clearParameters();
+			pstmt.setString(1, password);
+			pstmt.setString(2, username);
+			rset = pstmt.executeQuery();
+		} catch (SQLException e) {
+			System.out.println("createStatement " + e.getMessage() + sql);
+		}
+		return rset;
+	}
+	
+	/**
+	 * Changes the user's password
+	 * @param username The username whose password to change
+	 * @param oldPassword The user's old password
+	 * @param newPassword The new password for the user
+	 * @return
+	 */
+	public boolean changePassword(String username, String oldPassword, String newPassword)
+	{
+		String sql = null;
+		try {
+			ResultSet rset = null;
+			sql = "SELECT id " + 
+					"FROM User " + 
+					"WHERE pw_hash = sha2(concat(sha2(?,256),pw_salt),256) AND id = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.clearParameters();
+			pstmt.setString(1, oldPassword);
+			pstmt.setString(2, username);
+			rset = pstmt.executeQuery();
+			if (!rset.next()) {
+				return false;
+			}
+			String uid = rset.getString(1);
+			sql = "UPDATE User\n" + 
+					"SET pw_hash = sha2(concat(sha2(?,256),?),256), pw_salt=?" + 
+					"WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			byte[] salt = generateSalt();
+			pstmt.clearParameters();
+			pstmt.setString(1, newPassword);
+			pstmt.setBytes(2, salt);
+			pstmt.setBytes(3, salt);
+			pstmt.setString(4, uid);
+			int res = pstmt.executeUpdate();
+			return res > 0;
+		} catch (SQLException e) {
+			System.out.println("createStatement " + e.getMessage() + sql);
+		}
+		return false;
 	}
 	
 }// Utilities class
