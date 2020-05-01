@@ -189,7 +189,7 @@ public class Utilities {
 	 * @param username The username whose password to change
 	 * @param oldPassword The user's old password
 	 * @param newPassword The new password for the user
-	 * @return
+	 * @return True if the password was successfully changed, false otherwise
 	 */
 	public boolean changePassword(String username, String oldPassword, String newPassword)
 	{
